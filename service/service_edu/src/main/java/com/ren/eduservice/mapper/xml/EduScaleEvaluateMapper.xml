@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ren.eduservice.mapper.EduScaleEvaluateMapper">
+
+    <select id="getScaleEvaluate" resultType="com.ren.eduservice.entity.vo.ScaleEvaluateVo">
+        select AVG(understand_ability) as understandAbility,AVG(practice_ability) as practiceAbility,
+        AVG(accuracy_ability) as accuracyAbility from edu_scale_evaluate where scale_id = #{scaleId};
+    </select>
+
+</mapper>

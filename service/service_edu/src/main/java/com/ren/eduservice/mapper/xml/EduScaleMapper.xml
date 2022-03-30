@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ren.eduservice.mapper.EduScaleMapper">
+
+    <delete id="delScaleInfo" parameterType="string">
+        delete edu_scale,edu_scale_subject,edu_scale_appraisal from edu_scale
+        inner join edu_scale_subject on(edu_scale.id = edu_scale_subject.scale_id)
+        inner join edu_scale_appraisal on(edu_scale.id = edu_scale_appraisal.scale_id)
+        where edu_scale.id = #{scaleId};
+    </delete>
+
+</mapper>

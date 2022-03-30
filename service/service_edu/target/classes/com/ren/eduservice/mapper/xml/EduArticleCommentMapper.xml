@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ren.eduservice.mapper.EduArticleCommentMapper">
+
+    <select id="getArticleComment" resultType="com.ren.eduservice.entity.vo.ArticleCommentVo">
+        select a.id as userId, a.avatar, a.nick_name, (select count(*) from article_comment_praise c where c.comment_id
+        = b.id and c.comment_status = 0) as praise_count, b.gmt_create, b.comment, b.id as comment_id from
+        ucenter_member a,edu_article_comment b
+        where a.id = b.user_id and b.article_id = #{id} order by b.gmt_create desc;
+    </select>
+
+</mapper>

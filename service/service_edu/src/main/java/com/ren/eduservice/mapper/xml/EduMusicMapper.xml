@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ren.eduservice.mapper.EduMusicMapper">
+
+    <select id="getMusicVo" resultType="com.ren.eduservice.entity.vo.MusicVo">
+        select edu_music.id,edu_music.sign,edu_music.cover,ucenter_member.nick_name,ucenter_member.avatar from
+        edu_music,ucenter_member where edu_music.user_id = ucenter_member.id order by edu_music.gmt_create desc limit 5;
+    </select>
+
+    <select id="getMusicVoById" resultType="com.ren.eduservice.entity.vo.MusicVo">
+        select edu_music.id,edu_music.sign,edu_music.cover,edu_music.title,edu_music.music_url as
+        musicUrl,ucenter_member.nick_name from edu_music,ucenter_member where edu_music.user_id = ucenter_member.id and
+        edu_music.id = #{id};
+    </select>
+
+    <select id="getMusicVoById" resultType="com.ren.eduservice.entity.vo.MusicVo">
+        select edu_music.id,edu_music.sign,edu_music.cover,edu_music.title,edu_music.music_url as
+        musicUrl,ucenter_member.nick_name from edu_music,ucenter_member where edu_music.user_id = ucenter_member.id and
+        edu_music.id = #{id};
+    </select>
+
+    <select id="getRandMusicList" resultType="com.ren.eduservice.entity.EduMusic">
+        select * from edu_music where status = 'Normal' and edu_music.id != #{id} and is_deleted = 0 order by rand() limit 20;
+    </select>
+
+    <select id="getNavMusicList" resultType="com.ren.eduservice.entity.EduMusic">
+        select * from edu_music where status = 'Normal' and is_deleted = 0 order by rand() limit 20;
+    </select>
+
+    <select id="getDailyMusicCollectCount" resultType="com.ren.eduservice.entity.EduMusic">
+        select music_id as id, (count(*) + em.collect_count) as collect_count from edu_music_collect emc, edu_music em where Date(emc.gmt_create) = #{currentDate} and emc.is_deleted = 0 and emc.music_id = em.id
+        GROUP BY music_id;
+    </select>
+
+    <select id="getDailyMusicCommCount" resultType="com.ren.eduservice.entity.EduMusic">
+        select music_id as id, (count(*) + em.comm_count) as comm_count from edu_music_comment emc, edu_music em where Date(emc.gmt_create) = #{currentDate} and emc.is_deleted = 0 and emc.music_id = em.id
+        GROUP BY music_id;
+    </select>
+
+</mapper>

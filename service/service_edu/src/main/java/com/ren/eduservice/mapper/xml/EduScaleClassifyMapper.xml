@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ren.eduservice.mapper.EduScaleClassifyMapper">
+
+    <select id="getClassifyById" resultType="com.ren.eduservice.entity.EduScaleClassify">
+        select title from edu_scale_classify where id = #{id} or id = #{parentId};
+    </select>
+
+</mapper>

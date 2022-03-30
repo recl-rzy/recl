@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ren.eduservice.mapper.EduScaleCommentMapper">
+
+    <select id="getScaleComment" resultType="com.ren.eduservice.entity.vo.ScaleCommentVo">
+        select a.comment,a.gmt_create,b.avatar,b.nick_name,b.id as userId from edu_scale_comment as a,
+        ucenter_member as b where a.scale_id = #{scaleId} and b.id = a.user_id order by gmt_create desc;
+    </select>
+
+</mapper>
