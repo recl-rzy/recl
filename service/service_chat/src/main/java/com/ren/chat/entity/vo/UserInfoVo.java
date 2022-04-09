@@ -61,5 +61,8 @@ public class UserInfoVo {
 
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
+//
+//    @ApiModelProperty(value = "聊天状态(true表示正在聊天， false表示处于非聊天状态)")
+//    private Boolean chatStatus;
 }
 

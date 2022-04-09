@@ -62,8 +62,7 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
                 throw new ReclException(20001, "用户不存在");
             }
 
-            String jwtToken = JwtUtils.getJwtToken(aclUser.getId(), aclUser.getNickName());
-            return jwtToken;
+            return JwtUtils.getJwtToken(aclUser.getId(), aclUser.getNickName());
         }
 
         //密码判断（采用MD5加密方式）

@@ -9,7 +9,9 @@ import com.ren.eduservice.entity.DocScale;
 import com.ren.eduservice.entity.EduScale;
 import com.ren.eduservice.entity.vo.DocScaleQuery;
 import com.ren.eduservice.entity.vo.DocScaleVo;
+import com.ren.eduservice.entity.vo.UserInfoVo;
 import com.ren.eduservice.mapper.DocScaleMapper;
+import com.ren.eduservice.service.AclUserService;
 import com.ren.eduservice.service.DocScaleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ren.eduservice.service.EduCounselorService;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
 public class DocScaleServiceImpl extends ServiceImpl<DocScaleMapper, DocScale> implements DocScaleService {
 
     @Autowired
-    UcenterClient ucenterClient;
+    AclUserService aclUserService;
 
     @Autowired
     EduScaleService eduScaleService;
@@ -54,20 +56,14 @@ public class DocScaleServiceImpl extends ServiceImpl<DocScaleMapper, DocScale> i
         Page<DocScale> page = new Page<>(current, limit);
         QueryWrapper<DocScale> docWrapper = new QueryWrapper<>();
         Integer warningLevel = docScaleQuery.getWarningLevel();
-        Date start = docScaleQuery.getStart();
-        Date end = docScaleQuery.getEnd();
+        String start = docScaleQuery.getStart();
+        String end = docScaleQuery.getEnd();
 
-        if(!StringUtils.isEmpty(warningLevel)) {
-            docWrapper.eq("warning_level", warningLevel);
-        }
+        if(!StringUtils.isEmpty(warningLevel)) docWrapper.eq("warning_level", warningLevel);
 
-        if(!StringUtils.isEmpty(start)) {
-            docWrapper.ge("gmt_create", start);
-        }
+        if(!StringUtils.isEmpty(start)) docWrapper.ge("gmt_create", start);
 
-        if(!StringUtils.isEmpty(end)) {
-            docWrapper.le("gmt_modified", end);
-        }
+        if(!StringUtils.isEmpty(end)) docWrapper.le("gmt_modified", end);
 
         docWrapper.orderByDesc("warning_level");
 
@@ -80,12 +76,12 @@ public class DocScaleServiceImpl extends ServiceImpl<DocScaleMapper, DocScale> i
 
         Collection<EduScale> eduScales = eduScaleService.listByIds(scaleIds);
         List<EduScale> scales = new ArrayList<>(eduScales);
-        List<UcenterMember> users = ucenterClient.getUsers(userIds);
+        List<UserInfoVo> userInfoVos = aclUserService.getAclUsers(userIds);
 
         ArrayList<DocScaleVo> docScaleList = new ArrayList<>();
         for (DocScale docScale : records) {
 
-            for (UcenterMember user : users) {
+            for (UserInfoVo user : userInfoVos) {
 
                 for (EduScale scale : scales) {
 
@@ -99,6 +95,7 @@ public class DocScaleServiceImpl extends ServiceImpl<DocScaleMapper, DocScale> i
                         docScaleVo.setSex(user.getSex());
                         docScaleVo.setTitle(scale.getTitle());
                         docScaleList.add(docScaleVo);
+                        break;
                     }
                 }
             }

@@ -4,6 +4,7 @@ import com.ren.aclservice.entity.User;
 import com.ren.aclservice.service.PermissionService;
 import com.ren.aclservice.service.UserService;
 import com.ren.security.entity.SecurityUser;
+import com.ren.servicebase.exceptionhandler.ReclException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,6 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 判断用户是否存在
         if (null == user){
             //throw new UsernameNotFoundException("用户名不存在！");
+            throw new ReclException(20001, "用户不存在");
         }
         // 返回UserDetails实现类
         com.ren.security.entity.User curUser = new com.ren.security.entity.User();

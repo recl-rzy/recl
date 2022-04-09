@@ -50,7 +50,7 @@ public class EduScaleController {
 
 
     @ApiOperation(value = "量表基础信息添加")
-    @PostMapping("addScaleInfo")
+    @PostMapping("/addScaleInfo")
     public Result addScaleInfo(@RequestBody EduScale eduScale) {
 
         boolean flag = eduScaleService.save(eduScale);
@@ -65,7 +65,7 @@ public class EduScaleController {
     }
 
     @ApiOperation(value = "量表基础信息修改")
-    @PostMapping("updateScaleInfo")
+    @PostMapping("/updateScaleInfo")
     public Result updateScaleInfo(@RequestBody EduScale eduScale) {
 
         boolean flag = eduScaleService.updateById(eduScale);
@@ -79,7 +79,7 @@ public class EduScaleController {
     }
 
     @ApiOperation(value = "量表基础信息获取")
-    @GetMapping("getScaleInfo/{scaleId}")
+    @GetMapping("/getScaleInfo/{scaleId}")
     public Result getScaleInfo(@PathVariable String scaleId) {
 
         EduScale eduScale = eduScaleService.getById(scaleId);
@@ -88,7 +88,7 @@ public class EduScaleController {
     }
 
     @ApiOperation(value = "量表相关信息封装")
-    @GetMapping("getScaleInfoVo/{scaleId}")
+    @GetMapping("/getScaleInfoVo/{scaleId}")
     public Result getScaleInfoVo(@PathVariable String scaleId) {
 
         ScaleInfoVo scaleInfoVo = eduScaleService.getScaleInfoVo(scaleId);
@@ -134,7 +134,7 @@ public class EduScaleController {
         return Result.ok();
     }
 
-    @ApiOperation(value = "量表发布")
+    @ApiOperation(value = "量表下架")
     @PostMapping("/confirmScaleInfo/{id}")
     public Result confirmScaleInfo(@PathVariable String id) {
 

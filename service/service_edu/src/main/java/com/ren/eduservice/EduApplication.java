@@ -24,7 +24,7 @@ import java.util.*;
 @EnableFeignClients
 @EnableTransactionManagement
 @ComponentScan(basePackages = {"com.ren"})
-public class EduApplication {
+public class  EduApplication {
 
     public static void main(String[] args) {
 

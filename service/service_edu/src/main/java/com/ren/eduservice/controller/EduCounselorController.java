@@ -7,6 +7,7 @@ import com.ren.commonutils.Result;
 import com.ren.eduservice.entity.AclUser;
 import com.ren.eduservice.entity.vo.CounselorQuery;
 import com.ren.eduservice.entity.EduCounselor;
+import com.ren.eduservice.entity.vo.UserInfoVo;
 import com.ren.eduservice.service.AclUserService;
 import com.ren.eduservice.service.EduCounselorService;
 import com.ren.servicebase.exceptionhandler.ReclException;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -52,12 +54,12 @@ public class EduCounselorController {
      * @return
      */
     @ApiOperation(value = "咨询师信息分页及条件查询")
-    @PostMapping("/pageCounselorFactor/{current}/{limit}")
+    @PostMapping("/pageCounselor/{current}/{limit}")
     public Result pageCounselorFactor(@PathVariable long current, @PathVariable long limit,
                                       @RequestBody(required = false) CounselorQuery counselorQuery) {
 
         Page<EduCounselor> counselorPage = new Page<>(current, limit);
-        //查询条件wapper构建
+        //查询条件wrapper构建
         QueryWrapper<EduCounselor> wrapper = new QueryWrapper<>();
         String name = counselorQuery.getName();
         Integer level = counselorQuery.getLevel();
@@ -91,8 +93,10 @@ public class EduCounselorController {
     public Result findAllCounselor() {
 
         List<EduCounselor> counselors = counselorService.list(null);
+        List<String> ids = counselors.stream().map(EduCounselor::getUserId).collect(Collectors.toList());
+        List<UserInfoVo> aclUsers = aclUserService.getAclUsers(ids);
         return Result.ok()
-                .data("items", counselors);
+                .data("items", aclUsers);
     }
 
     /**
@@ -123,18 +127,18 @@ public class EduCounselorController {
      * @param limit   查询记录条数
      * @return
      */
-    @ApiOperation(value = "咨询师信息分页")
-    @GetMapping("/pageCounselor/{current}/{limit}")
-    public Result pageListCounselors(@PathVariable long current, @PathVariable long limit) {
-
-        Page<EduCounselor> counselorPage = new Page<>(current, limit);
-        counselorService.page(counselorPage, null);
-        long total = counselorPage.getTotal();
-        List<EduCounselor> records = counselorPage.getRecords();
-        return Result.ok()
-                .data("total", total)
-                .data("rows", records);
-    }
+//    @ApiOperation(value = "咨询师信息分页")
+//    @GetMapping("/pageCounselor/{current}/{limit}")
+//    public Result pageListCounselors(@PathVariable long current, @PathVariable long limit) {
+//
+//        Page<EduCounselor> counselorPage = new Page<>(current, limit);
+//        counselorService.page(counselorPage, null);
+//        long total = counselorPage.getTotal();
+//        List<EduCounselor> records = counselorPage.getRecords();
+//        return Result.ok()
+//                .data("total", total)
+//                .data("rows", records);
+//    }
 
 
     /**

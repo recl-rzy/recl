@@ -18,4 +18,8 @@ public interface MsgService extends IService<ChatMsg> {
     void addChatMsg(ChatMsg chatMsg);
 
     List<ChatMsg> getChatMsg(String sendUserId, String receiveUserId);
+
+    void pushReservationMsg(String userId);
+
+    boolean applyForChat(String userId, String msg);
 }

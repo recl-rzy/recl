@@ -1,7 +1,9 @@
 package com.ren.eduservice.service;
 
+import com.ren.commonutils.Result;
 import com.ren.eduservice.entity.EduReservation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ren.eduservice.entity.vo.ReservationQuery;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface EduReservationService extends IService<EduReservation> {
 
+    Result pageOwnReservation(String id, long current, long limit, ReservationQuery reservationQuery);
 }

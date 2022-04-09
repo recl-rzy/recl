@@ -20,8 +20,17 @@ public class UserInfoVo {
     @ApiModelProperty(value = "用户ID")
     private String id;
 
+    @ApiModelProperty(value = "咨询师id")
+    private String counselorId;
+
+    @ApiModelProperty(value = "倾听师id")
+    private String listenerId;
+
     @ApiModelProperty(value = "用户名")
     private String username;
+
+    @ApiModelProperty(value = "用户电话")
+    private String mobile;
 
     @ApiModelProperty(value = "密码")
     private String password;
@@ -61,5 +70,8 @@ public class UserInfoVo {
 
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
+
+    @ApiModelProperty(value = "聊天状态(true表示正在聊天， false表示处于非聊天状态)")
+    private Boolean chatStatus=false;
 }
 

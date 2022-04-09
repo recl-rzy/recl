@@ -23,10 +23,10 @@ public class DocScaleQuery {
     private Integer warningLevel;
 
     @ApiModelProperty(value = "创建时间")
-    private Date start;
+    private String start;
 
     @ApiModelProperty(value = "创建时间")
-    private Date end;
+    private String end;
 
 }
 

@@ -53,7 +53,7 @@ public class ChatWebSocket {
     private Session WebSocketSession;
     //当前发消息的人员编号
     private String sendUserId = "";
-    //当前发消息的人员编号
+    //当前接收消息的人员编号
     private String receiveUserId = "";
 
 

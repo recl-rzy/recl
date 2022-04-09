@@ -335,6 +335,7 @@ public class EduScaleServiceImpl extends ServiceImpl<EduScaleMapper, EduScale> i
                     ScaleInfoVo scaleInfoVo = new ScaleInfoVo();
                     BeanUtils.copyProperties(scale, scaleInfoVo);
                     scaleInfoVo.setCounselorName(userInfoVo.getNickName());
+                    scaleInfoVo.setUserId(userInfoVo.getId());
                     scaleList.add(scaleInfoVo);
                     break;
                 }

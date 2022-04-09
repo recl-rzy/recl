@@ -23,6 +23,12 @@ public class UserInfoVo {
     @ApiModelProperty(value = "用户ID")
     private String id;
 
+    @ApiModelProperty(value = "咨询师id")
+    private String counselorId;
+
+    @ApiModelProperty(value = "倾听师id")
+    private String listenerId;
+
     @ApiModelProperty(value = "用户名")
     private String username;
 

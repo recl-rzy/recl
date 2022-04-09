@@ -24,6 +24,9 @@ public class ScaleInfoVo {
     @ApiModelProperty(value = "心理测试量表唯一id")
     private String id;
 
+    @ApiModelProperty(value = "发布相关测试的用户唯一id")
+    private String userId;
+
     @ApiModelProperty(value = "量表发布咨询师Name")
     String counselorName;
 

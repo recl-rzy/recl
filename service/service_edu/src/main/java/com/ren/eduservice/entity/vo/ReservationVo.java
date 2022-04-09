@@ -1,45 +1,37 @@
-package com.ren.eduservice.entity;
+package com.ren.eduservice.entity.vo;
 
 import com.baomidou.mybatisplus.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.util.Date;
 
-import java.io.Serializable;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-
 /**
- * <p>
- * 
- * </p>
- *
- * @author rzy
- * @since 2022-02-27
+ * @Description: TODO
+ * @ClassName: ReservationVo
+ * @Project_Name: recl
+ * @Author RZY
+ * @Date: 2022/3/31 18:09
+ * @Vertion: v1.0
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-@ApiModel(value="EduReservation对象", description="")
-public class EduReservation implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+@Data
+public class ReservationVo {
 
     @ApiModelProperty(value = "预约记录唯一ID")
-    @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
 
     @ApiModelProperty(value = "预约咨询师ID")
     private String counselorId;
 
-    @ApiModelProperty(value = "预约用户姓名")
-    private String userName;
+    @ApiModelProperty(value = "咨询专家姓名")
+    private String counselorName;
 
     @ApiModelProperty(value = "预约用户ID")
     private String reservationUserId;
+
+    @ApiModelProperty(value = "预约用户姓名")
+    private String userName;
 
     @ApiModelProperty(value = "预约用户手机号")
     private String mobile;
@@ -58,7 +50,7 @@ public class EduReservation implements Serializable {
 
     @ApiModelProperty(value = "处理结果")
     private String dealResult;
-    
+
     @ApiModelProperty(value = "逻辑删除字段（0代表false，1代表true）")
     @TableLogic
     private Boolean isDeleted;
@@ -70,6 +62,4 @@ public class EduReservation implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
-
-
 }

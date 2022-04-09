@@ -56,10 +56,12 @@ public class AclUserController {
 
             EduCounselor counselor = eduCounselorService.getOne(new QueryWrapper<EduCounselor>().eq("user_id", id));
             BeanUtils.copyProperties(counselor, userInfo);
+            userInfo.setCounselorId(counselor.getId());
         } else if (aclUser.getIsListener()) {
 
             EduListener listener = eduListenerService.getOne(new QueryWrapper<EduListener>().eq("user_id", id));
             BeanUtils.copyProperties(listener, userInfo);
+            userInfo.setListenerId(listener.getId());
         }
         userInfo.setId(id);
         return userInfo;

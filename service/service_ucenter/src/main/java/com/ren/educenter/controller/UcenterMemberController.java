@@ -2,12 +2,8 @@ package com.ren.educenter.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.ren.commonutils.JwtUtils;
-import com.ren.commonutils.MD5;
-import com.ren.commonutils.RedisUtils;
-import com.ren.commonutils.Result;
+import com.ren.commonutils.*;
 import com.ren.educenter.client.AclUserClient;
-import com.ren.educenter.entity.AclUser;
 import com.ren.educenter.entity.UcenterMember;
 import com.ren.educenter.entity.vo.RegisterVo;
 import com.ren.educenter.entity.vo.UserInfoVo;
@@ -77,6 +73,8 @@ public class UcenterMemberController {
             UserInfoVo userInfo = new UserInfoVo();
             userInfo.setUsername(ucenterMember.getMobile());
             BeanUtils.copyProperties(ucenterMember, userInfo);
+            // 将用户信息放入redis
+            RedisUtils.set(CacheConstant.USER + userInfo.getId(), userInfo);
             return Result.ok()
                     .data("userInfo", userInfo);
         } else {
@@ -84,6 +82,8 @@ public class UcenterMemberController {
             UserInfoVo userInfo = aclUserClient.getAclUserById(id);
             if(!StringUtils.isEmpty(userInfo)) {
 
+                // 将用户信息放入redis
+                RedisUtils.set(CacheConstant.USER + userInfo.getId(), userInfo);
                 return Result.ok()
                         .data("userInfo", userInfo);
             }
