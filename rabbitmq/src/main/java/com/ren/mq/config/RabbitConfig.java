@@ -2,15 +2,10 @@ package com.ren.mq.config;
 
 import com.ren.mq.constant.MQConst;
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.CorrelationData;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @Description: TODO
@@ -22,7 +17,7 @@ import javax.annotation.PostConstruct;
  */
 
 @Configuration
-public class MQConfig {
+public class RabbitConfig {
 
     @Bean
     public MessageConverter messageConverter() {
@@ -58,4 +53,6 @@ public class MQConfig {
     public Binding orderBinding() {
         return BindingBuilder.bind(orderQueue()).to(orderDirectExchange()).with(MQConst.ROUTING_ORDER);
     }
+
+
 }

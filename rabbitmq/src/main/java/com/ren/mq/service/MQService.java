@@ -1,11 +1,11 @@
-package com.ren.mq.utils;
+package com.ren.mq.service;
 
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
  * @Description: TODO
@@ -16,15 +16,15 @@ import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
  * @Vertion: v1.0
  */
 
-@Component
-public class MQUtils {
+@Service
+public class MQService {
 
     @Resource
-    private AmqpTemplate amqpTemplate;
+    private RabbitTemplate rabbitTemplate;
 
     public boolean sendMessage(String exchange, String routingKey, Object message) {
         System.out.println("-----------:" + "消息发送中");
-        amqpTemplate.convertAndSend(exchange, routingKey, message);
+        rabbitTemplate.convertAndSend(exchange, routingKey, message);
         return true;
     }
 }

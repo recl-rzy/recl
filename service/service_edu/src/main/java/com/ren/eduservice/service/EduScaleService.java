@@ -3,10 +3,7 @@ package com.ren.eduservice.service;
 import com.ren.commonutils.Result;
 import com.ren.eduservice.entity.EduScale;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ren.eduservice.entity.vo.ScaleFrontVo;
-import com.ren.eduservice.entity.vo.ScaleInfoVo;
-import com.ren.eduservice.entity.vo.ScaleQuery;
-import com.ren.eduservice.entity.vo.ScaleVo;
+import com.ren.eduservice.entity.vo.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -38,4 +35,6 @@ public interface EduScaleService extends IService<EduScale> {
     Result pageScaleFactor(long current, long limit, ScaleQuery scaleQuery);
 
     List<ScaleVo> getCollectScale(String userId);
+
+    Result pageComment(long current, long limit, ScaleCommentQuery scaleCommentQuery);
 }

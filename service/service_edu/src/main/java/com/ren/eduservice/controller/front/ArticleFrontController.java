@@ -49,10 +49,7 @@ public class ArticleFrontController {
     @ApiOperation(value = "前台美文内容查询")
     @GetMapping("/getArticleInfo/{id}")
     public Result getArticleInfo(@PathVariable String id) {
-
-        Result result = eduArticleService.getFrontArticleInfo(id);
-
-        return result;
+        return eduArticleService.getFrontArticleInfo(id);
     }
 
     @ApiOperation(value = "前台美文评论拉取")

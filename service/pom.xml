@@ -25,14 +25,16 @@
 
     <dependencies>
 
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-config &ndash;&gt;-->
-<!--        <dependency>-->
+        <dependency>
 
-<!--            <groupId>com.alibaba.cloud</groupId>-->
+            <groupId>com.ren</groupId>
 
-<!--            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
+            <artifactId>rabbitmq</artifactId>
 
-<!--        </dependency>-->
+            <version>0.0.1-SNAPSHOT</version>
+
+        </dependency>
+
         <dependency>
 
             <groupId>com.alibaba.cloud</groupId>

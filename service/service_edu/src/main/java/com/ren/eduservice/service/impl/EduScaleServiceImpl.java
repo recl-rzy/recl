@@ -378,4 +378,51 @@ public class EduScaleServiceImpl extends ServiceImpl<EduScaleMapper, EduScale> i
             return scaleList;
         }
     }
+
+    @Override
+    public Result pageComment(long current, long limit, ScaleCommentQuery scaleCommentQuery) {
+
+        String comment = scaleCommentQuery.getComment();
+        String start = scaleCommentQuery.getStart();
+        String end = scaleCommentQuery.getEnd();
+
+        QueryWrapper<EduScaleComment> wrapper = new QueryWrapper<>();
+        if(!StringUtils.isEmpty(comment)) wrapper.like("comment", comment);
+
+        if(!StringUtils.isEmpty(start)) wrapper.ge("gmt_create", start);
+
+        if(!StringUtils.isEmpty(end)) wrapper.le("gmt_modified", end);
+
+        Page<EduScaleComment> page = new Page<>(current, limit);
+        eduScaleCommentService.page(page, wrapper.orderByDesc("id"));
+        List<EduScaleComment> records = page.getRecords();
+        long total = page.getTotal();
+
+        List<String> userIds = records.stream().map(EduScaleComment::getUserId).collect(Collectors.toList());
+        List<String> scaleIds = records.stream().map(EduScaleComment::getScaleId).collect(Collectors.toList());
+
+        List<UserInfoVo> users = aclUserService.getAclUsers(userIds);
+        List<EduScale> scales = this.baseMapper.selectBatchIds(scaleIds);
+        ArrayList<ScaleCommentVo> list = new ArrayList<>();
+        records.forEach(record -> {
+            ScaleCommentVo commentVo = new ScaleCommentVo();
+            BeanUtils.copyProperties(record, commentVo);
+            for (EduScale scale : scales) {
+                if(scale.getId().equals(record.getScaleId())) {
+                    commentVo.setTitle(scale.getTitle());
+                    for (UserInfoVo user : users) {
+                        commentVo.setNickName(user.getNickName());
+                        commentVo.setAvatar(user.getAvatar());
+                        break;
+                    }
+                    list.add(commentVo);
+                    break;
+                }
+            }
+        });
+
+        return Result.ok()
+                .data("total", total)
+                .data("list", list);
+    }
 }

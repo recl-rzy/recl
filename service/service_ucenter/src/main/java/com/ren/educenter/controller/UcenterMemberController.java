@@ -73,8 +73,7 @@ public class UcenterMemberController {
             UserInfoVo userInfo = new UserInfoVo();
             userInfo.setUsername(ucenterMember.getMobile());
             BeanUtils.copyProperties(ucenterMember, userInfo);
-            // 将用户信息放入redis
-            RedisUtils.set(CacheConstant.USER + userInfo.getId(), userInfo);
+
             return Result.ok()
                     .data("userInfo", userInfo);
         } else {
@@ -82,8 +81,6 @@ public class UcenterMemberController {
             UserInfoVo userInfo = aclUserClient.getAclUserById(id);
             if(!StringUtils.isEmpty(userInfo)) {
 
-                // 将用户信息放入redis
-                RedisUtils.set(CacheConstant.USER + userInfo.getId(), userInfo);
                 return Result.ok()
                         .data("userInfo", userInfo);
             }

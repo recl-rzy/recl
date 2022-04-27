@@ -9,9 +9,12 @@
     <file url="file://$PROJECT_DIR$/common/service_base/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/spring_security" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/spring_security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/infrastructure" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/infrastructure/gateway" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/infrastructure/gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/infrastructure/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbitmq/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service/service_acl" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service/service_acl/src/main/java" charset="UTF-8" />
@@ -30,6 +33,9 @@
     <file url="file://$PROJECT_DIR$/service/service_ucenter" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service/service_ucenter/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service/service_vod" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/service/service_vod/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="PROJECT" charset="GBK" />
   </component>
 </project>

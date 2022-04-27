@@ -3,6 +3,8 @@ package com.ren.orderservice.service;
 import com.ren.commonutils.Result;
 import com.ren.orderservice.entity.OrderPayLog;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ren.orderservice.entity.ScaleOrder;
+import org.springframework.amqp.core.Message;
 
 /**
  * <p>
@@ -14,5 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OrderPayLogService extends IService<OrderPayLog> {
 
-    Result saveScaleOrder(String scaleOrder);
+    Result saveScaleOrder(Message message, ScaleOrder scaleOrder);
 }

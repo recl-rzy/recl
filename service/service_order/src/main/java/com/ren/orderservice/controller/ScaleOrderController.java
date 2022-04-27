@@ -24,11 +24,17 @@ public class ScaleOrderController {
     @Autowired
     ScaleOrderService scaleOrderService;
 
-    @PostMapping("/createOrder")
-    public Result createOrder(HttpServletRequest req,
+    @PostMapping("/createScaleOrder")
+    public Result createScaleOrder(HttpServletRequest req,
                               @RequestBody(required = false) ScaleOrder scaleOrder) {
 
         return scaleOrderService.createScaleOrder(req, scaleOrder);
+    }
+
+    @GetMapping("/getScaleOrder/{orderNo}")
+    public Result getScaleOrder(@PathVariable String orderNo) {
+
+        return Result.ok();
     }
 }
 

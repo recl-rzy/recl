@@ -1,7 +1,9 @@
 package com.ren.eduservice.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ren.commonutils.RedisUtils;
 import com.ren.commonutils.Result;
 
 import com.ren.eduservice.entity.EduMusic;
@@ -14,6 +16,7 @@ import com.ren.eduservice.service.AclUserService;
 import com.ren.eduservice.service.EduMusicCollectService;
 import com.ren.eduservice.service.EduMusicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ren.servicebase.constant.RedisKeyPrefixConstant;
 import com.ren.servicebase.exceptionhandler.ReclException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,58 +111,63 @@ public class EduMusicServiceImpl extends ServiceImpl<EduMusicMapper, EduMusic> i
     @Override
     public List<MusicVo> getRandMusicVoList(String musicId, String userId) {
 
-        EduMusic currentMusic = this.baseMapper.selectById(musicId);
-        List<EduMusic> randMusicList = this.baseMapper.getRandMusicList(musicId);
-        randMusicList.add(0, currentMusic);
-        List<String> userIds = randMusicList.stream().map(EduMusic::getUserId).collect(Collectors.toList());
-        List<String> musicIds;
-        List<EduMusicCollect> collects = null;
-        if(!StringUtils.isEmpty(userId)) {
+        //获取随机音频key
+        String randMusicKey = RedisKeyPrefixConstant.RAND_MUSIC_FRONT_CACHE + musicId + ":" + userId;
+        //redis中获取音频数据
+        String musicListStr = RedisUtils.getStr(randMusicKey);
+        List<MusicVo> musicList;
+        if(musicListStr == null) {     //缓存为空，查询数据库
 
-            musicIds = randMusicList.stream().map(EduMusic::getId).collect(Collectors.toList());
-            collects = eduMusicCollectService.list(new QueryWrapper<EduMusicCollect>()
-                    .eq("user_id", userId)
-                    .in("music_id", musicIds)
-                    .select("music_id"));
+            EduMusic currentMusic = this.baseMapper.selectById(musicId);
+            List<EduMusic> randMusicList = this.baseMapper.getRandMusicList(musicId);
+            randMusicList.add(0, currentMusic);
+            List<String> userIds = randMusicList.stream().map(EduMusic::getUserId).collect(Collectors.toList());
+            List<String> musicIds;
+            List<EduMusicCollect> collects = null;
+            if(!StringUtils.isEmpty(userId)) {
 
-        }
-        List<UserInfoVo> userInfoVos = aclUserService.getAclUsers(userIds);
+                musicIds = randMusicList.stream().map(EduMusic::getId).collect(Collectors.toList());
+                collects = eduMusicCollectService.list(new QueryWrapper<EduMusicCollect>()
+                        .eq("user_id", userId)
+                        .in("music_id", musicIds)
+                        .select("music_id"));
 
-        ArrayList<MusicVo> musicList = new ArrayList<>();
+            }
+            List<UserInfoVo> userInfoVos = aclUserService.getAclUsers(userIds);
 
-        for (EduMusic music : randMusicList) {
+            musicList = new ArrayList<>();
 
-            try {
-                for (UserInfoVo userInfoVo : userInfoVos) {
-                    if(userInfoVo.getId().equals(music.getUserId())) {
-
-                        MusicVo musicVo = new MusicVo();
-                        BeanUtils.copyProperties(music, musicVo);
-                        BeanUtils.copyProperties(userInfoVo, musicVo);
-                        musicVo.setUserId(userInfoVo.getId());
-                        musicVo.setId(music.getId());
-                        musicVo.setSign(music.getSign());
-                        if(!StringUtils.isEmpty(collects)) {
-
-                            for (EduMusicCollect collect : collects) {
-
-                                if(collect.getMusicId().equals(music.getId())) {
-
-                                    musicVo.setIsCollect(true);
-                                    break;
+            for (EduMusic music : randMusicList) {
+                try {
+                    for (UserInfoVo userInfoVo : userInfoVos) {
+                        if(userInfoVo.getId().equals(music.getUserId())) {
+                            MusicVo musicVo = new MusicVo();
+                            BeanUtils.copyProperties(music, musicVo);
+                            BeanUtils.copyProperties(userInfoVo, musicVo);
+                            musicVo.setUserId(userInfoVo.getId());
+                            musicVo.setId(music.getId());
+                            musicVo.setSign(music.getSign());
+                            if(!StringUtils.isEmpty(collects)) {
+                                for (EduMusicCollect collect : collects) {
+                                    if(collect.getMusicId().equals(music.getId())) {
+                                        musicVo.setIsCollect(true);
+                                        break;
+                                    }
                                 }
                             }
+                            musicList.add(musicVo);
+                            break;
                         }
-                        musicList.add(musicVo);
-                        break;
                     }
+                } catch (NullPointerException e) {
+                    throw new ReclException(20001, "获取失败");
                 }
-            } catch (NullPointerException e) {
-
-                throw new ReclException(20001, "获取失败");
             }
+            //放入缓存Redis中
+            RedisUtils.set(randMusicKey, musicList, RedisUtils.setCacheTimeout(3600));
         }
 
+        musicList = JSON.parseArray(RedisUtils.getStr(randMusicKey), MusicVo.class);
         return musicList;
     }
 

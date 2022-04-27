@@ -1,6 +1,7 @@
 package com.ren.eduservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ren.commonutils.RedisUtils;
 import com.ren.eduservice.client.UcenterClient;
 import com.ren.eduservice.entity.AclUser;
 import com.ren.eduservice.entity.EduCounselor;
@@ -12,6 +13,7 @@ import com.ren.eduservice.service.AclUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ren.eduservice.service.EduCounselorService;
 import com.ren.eduservice.service.EduListenerService;
+import com.ren.servicebase.constant.RedisKeyPrefixConstant;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,30 +45,44 @@ public class AclUserServiceImpl extends ServiceImpl<AclUserMapper, AclUser> impl
     @Override
     public UserInfoVo getAclUserById(String id) {
 
-        UserInfoVo userInfoVo = new UserInfoVo();
-        EduCounselor counselor = eduCounselorService.getOne(new QueryWrapper<EduCounselor>().eq("user_id", id));
-        if(!StringUtils.isEmpty(counselor)) {
+        //redis对应的key
+        String aclUserKey = RedisKeyPrefixConstant.ACL_USER_CACHE + id;
+        //redis中查询key
+        UserInfoVo userInfoVo = (UserInfoVo) RedisUtils.get(aclUserKey);
 
-            BeanUtils.copyProperties(counselor, userInfoVo);
-            userInfoVo.setNickName(counselor.getName());
-            userInfoVo.setId(id);
-        } else {
+        if(userInfoVo == null) {
 
-            EduListener listener = eduListenerService.getOne(new QueryWrapper<EduListener>().eq("user_id", id));
-            if(!StringUtils.isEmpty(listener)) {
+            userInfoVo = new UserInfoVo();
+            //查询数据库并封装
+            EduCounselor counselor = eduCounselorService.getOne(new QueryWrapper<EduCounselor>().eq("user_id", id));
+            if(!StringUtils.isEmpty(counselor)) {
 
-                BeanUtils.copyProperties(listener, userInfoVo);
-                userInfoVo.setNickName(listener.getName());
+                BeanUtils.copyProperties(counselor, userInfoVo);
+                userInfoVo.setNickName(counselor.getName());
                 userInfoVo.setId(id);
             } else {
 
-                UcenterMember member = ucenterClient.getSingleUser(id);
-                if(!StringUtils.isEmpty(member)) {
+                EduListener listener = eduListenerService.getOne(new QueryWrapper<EduListener>().eq("user_id", id));
+                if(!StringUtils.isEmpty(listener)) {
 
-                    BeanUtils.copyProperties(member, userInfoVo);
+                    BeanUtils.copyProperties(listener, userInfoVo);
+                    userInfoVo.setNickName(listener.getName());
+                    userInfoVo.setId(id);
+                } else {
+
+                    UcenterMember member = ucenterClient.getSingleUser(id);
+                    if(!StringUtils.isEmpty(member)) {
+
+                        BeanUtils.copyProperties(member, userInfoVo);
+                    }
                 }
             }
+            //放入缓存
+            RedisUtils.set(aclUserKey, userInfoVo, RedisUtils.setCacheTimeout(7200));
         }
+
+        //缓存续约
+        RedisUtils.expire(aclUserKey, RedisUtils.setCacheTimeout(7200));
         return userInfoVo;
     }
 

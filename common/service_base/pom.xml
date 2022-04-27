@@ -12,11 +12,24 @@
     <artifactId>service_base</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>com.ren</groupId>
             <artifactId>common_utils</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!--   分布式锁Redisson     -->
+        <dependency>
+
+            <groupId>org.redisson</groupId>
+
+            <artifactId>redisson-spring-boot-starter</artifactId>
+
+            <version>3.17.0</version>
+
+        </dependency>
+
     </dependencies>
 
 </project>

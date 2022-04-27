@@ -9,18 +9,22 @@ package com.ren.commonutils;
  * @Vertion: 2019.1
  */
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisUtils {
+
     private static RedisTemplate<String, Object> redisTemplate;
 
 
@@ -32,6 +36,10 @@ public class RedisUtils {
     @Autowired
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         RedisUtils.redisTemplate = redisTemplate;
+    }
+
+    public static long setCacheTimeout(long time) {
+        return time + new Random().nextInt(7) * 60;
     }
 
     /**
@@ -100,6 +108,12 @@ public class RedisUtils {
      * @param key 键
      * @return 值
      */
+    public static String getStr(String key) {
+        if(key == null) return null;
+        Object value = redisTemplate.opsForValue().get(key);
+        return value == null ? null : JSON.toJSONString(value);
+    }
+
     public static Object get(String key) {
         return key == null ? null : redisTemplate.opsForValue().get(key);
     }

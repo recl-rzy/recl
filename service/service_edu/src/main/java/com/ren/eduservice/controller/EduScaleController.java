@@ -4,6 +4,7 @@ package com.ren.eduservice.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ren.commonutils.Result;
 import com.ren.eduservice.entity.*;
+import com.ren.eduservice.entity.vo.ScaleCommentQuery;
 import com.ren.eduservice.entity.vo.ScaleInfoVo;
 import com.ren.eduservice.entity.vo.ScaleQuery;
 import com.ren.eduservice.service.*;
@@ -53,6 +54,7 @@ public class EduScaleController {
     @PostMapping("/addScaleInfo")
     public Result addScaleInfo(@RequestBody EduScale eduScale) {
 
+        eduScale.setStatus("Draft");
         boolean flag = eduScaleService.save(eduScale);
         if (flag) {
             return Result.ok()
@@ -135,8 +137,8 @@ public class EduScaleController {
     }
 
     @ApiOperation(value = "量表下架")
-    @PostMapping("/confirmScaleInfo/{id}")
-    public Result confirmScaleInfo(@PathVariable String id) {
+    @PostMapping("/verifyScale/{id}")
+    public Result verifyScale(@PathVariable String id) {
 
         EduScale eduScale = new EduScale();
         eduScale.setId(id);
@@ -223,6 +225,22 @@ public class EduScaleController {
                                        @RequestBody(required = false) ScaleQuery scaleQuery) {
 
         return eduScaleService.pageScaleFactor(current, limit, scaleQuery);
+    }
+
+    @ApiOperation(value = "量表评论")
+    @PostMapping("/pageComment/{current}/{limit}")
+    public Result pageComment(@PathVariable long current, @PathVariable long limit,
+                                  @RequestBody(required = false) ScaleCommentQuery scaleCommentQuery) {
+
+        return eduScaleService.pageComment(current, limit, scaleCommentQuery);
+    }
+
+    @ApiOperation(value = "量表评论删除")
+    @DeleteMapping("/delComment/{id}")
+    public Result delComment(@PathVariable String id) {
+
+        boolean remove = eduScaleCommentService.removeById(id);
+        return Result.ok();
     }
 
 }

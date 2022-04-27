@@ -26,9 +26,10 @@ import org.springframework.web.util.pattern.PathPatternParser;
  */
 @Configuration
 public class CorsConfig {
+
     @Bean
     public CorsWebFilter corsFilter() {
-        System.out.println("12312313");
+
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedMethod("*");
         config.addAllowedOrigin("*");

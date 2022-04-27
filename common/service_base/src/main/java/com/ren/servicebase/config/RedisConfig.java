@@ -4,6 +4,8 @@ package com.ren.servicebase.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.redisson.Redisson;
+import org.redisson.config.Config;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +34,13 @@ import java.time.Duration;
 @Configuration
 public class RedisConfig {
 
+    @Bean
+    public Redisson redisson() {
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://47.108.105.42:6379").setPassword("root");
+        return (Redisson) Redisson.create(config);
+    }
+    
     @Bean
     @SuppressWarnings("all")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {

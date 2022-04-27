@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {"com.ren"})
 @SpringBootApplication
-@MapperScan("com.ren.eduservice.mapper")
+@MapperScan("com.ren.orderservice.mapper")
 @EnableTransactionManagement
 public class OrderApplication {
     public static void main(String[] args) {
