@@ -84,27 +84,16 @@ public class EduArticleController {
     public Result getArticle(@PathVariable String id) {
 
         //缓存key
-        String articleBackKey = RedisKeyPrefixConstant.ARTICLE_BACK_CACHE + id;
+//        String articleBackKey = RedisKeyPrefixConstant.ARTICLE_BACK_CACHE + id;
         EduArticle article;
         //查询Redis缓存
-        String articleStr = RedisUtils.getStr(articleBackKey);
-        //判断是否在Redis中
-        if(articleStr == null) {
-            //Redis中不存在，查询数据库
-            article = eduArticleService.getById(id);
-            if(article == null) {
-                //数据库中不存在，作标识，防止缓存击穿
-                RedisUtils.set(articleBackKey, RedisKeyPrefixConstant.EMPTY_CACHE);
-            }
-            //存在则放入Redis
-            RedisUtils.set(articleBackKey, article, RedisUtils.setCacheTimeout(3600));
-        } else {
-            //判断是否为Empty缓存
-            if(RedisKeyPrefixConstant.EMPTY_CACHE.equals(articleStr)) return Result.error().message("该文章不存在").data("article", new EduArticle());
-            article = JSON.parseObject(articleStr, EduArticle.class);
-            //缓存续约
-            RedisUtils.expire(articleBackKey, RedisUtils.setCacheTimeout(3600));
-        }
+        article = (EduArticle) RedisUtils.get(id);
+        if(article != null) return Result.ok()
+                .data("article", article);
+        //Redis中不存在，查询数据库
+        article = eduArticleService.getById(id);
+        //存在则放入Redis
+        RedisUtils.set(id, article, RedisUtils.setCacheTimeout(3600));
         return Result.ok()
                 .data("article", article);
     }

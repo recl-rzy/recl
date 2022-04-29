@@ -36,6 +36,12 @@ public class ScaleInfoVo {
     @ApiModelProperty(value = "测试量表二级分类的标题")
     private String twoClassify;
 
+    @ApiModelProperty(value = "测试量表二级分类的唯一id")
+    private String classifyId;
+
+    @ApiModelProperty(value = "测试量表一级分类的唯一id")
+    private String classifyParentId;
+
     @ApiModelProperty(value = "测试量表标题")
     private String title;
 
@@ -43,10 +49,10 @@ public class ScaleInfoVo {
     private BigDecimal price;
 
     @ApiModelProperty(value = "量表购买数量")
-    private Long buyCount;
+    private Integer buyCount;
 
     @ApiModelProperty(value = "浏览量")
-    private Long viewCount;
+    private Integer viewCount;
 
     @ApiModelProperty(value = "测试量表封面图片路径")
     private String cover;

@@ -70,7 +70,7 @@
 
         <docker.image.prefix>zx</docker.image.prefix>
 
-        <cloud-alibaba.version>2.2.5.RELEASE</cloud-alibaba.version>
+        <cloud-alibaba.version>2.2.0.RELEASE</cloud-alibaba.version>
 
     </properties>
 

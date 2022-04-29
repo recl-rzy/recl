@@ -42,7 +42,7 @@ public class ScalePageVo {
     private String cover;
 
     @ApiModelProperty(value = "浏览量")
-    private Long viewCount;
+    private Integer viewCount;
 
     @ApiModelProperty(value = "创建时间")
     private Date gmtCreate;

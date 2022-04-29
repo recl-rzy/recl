@@ -74,8 +74,7 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
             throw new ReclException(20001, "账户已经被禁止登录");
         }
 
-        String jwtToken = JwtUtils.getJwtToken(member.getId(), member.getNickName());
-        return jwtToken;
+        return JwtUtils.getJwtToken(member.getId(), member.getNickName());
     }
 
     @Override
