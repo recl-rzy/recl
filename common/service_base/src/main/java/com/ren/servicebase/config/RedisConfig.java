@@ -43,7 +43,7 @@ public class RedisConfig {
     @Bean
     public Redisson redisson() {
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://47.108.105.42:6379");
+        config.useSingleServer().setAddress("redis://127.0.0.1:6379");
         return (Redisson) Redisson.create(config);
     }
     
@@ -84,15 +84,15 @@ public class RedisConfig {
     }
 
     //Redis读写分离配置
-    @Bean
-    public RedisConnectionFactory lettuceConnectionFactory(RedisProperties redisProperties) {
-        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration(redisProperties.getSentinel().getMaster(),
-                new HashSet<>(redisProperties.getSentinel().getNodes()));
-        LettuceClientConfiguration lettuceClientConfiguration = LettuceClientConfiguration.builder()
-                .readFrom(ReadFrom.REPLICA_PREFERRED)
-                .build();
-        return new LettuceConnectionFactory(redisSentinelConfiguration, lettuceClientConfiguration);
-    }
+//    @Bean
+//    public RedisConnectionFactory lettuceConnectionFactory(RedisProperties redisProperties) {
+//        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration(redisProperties.getSentinel().getMaster(),
+//                new HashSet<>(redisProperties.getSentinel().getNodes()));
+//        LettuceClientConfiguration lettuceClientConfiguration = LettuceClientConfiguration.builder()
+//                .readFrom(ReadFrom.REPLICA_PREFERRED)
+//                .build();
+//        return new LettuceConnectionFactory(redisSentinelConfiguration, lettuceClientConfiguration);
+//    }
 
 
     @Bean
