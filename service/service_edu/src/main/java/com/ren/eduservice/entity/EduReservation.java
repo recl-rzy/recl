@@ -33,7 +33,7 @@ public class EduReservation implements Serializable {
     private String id;
 
     @ApiModelProperty(value = "预约咨询师ID")
-    private String counselorId;
+    private String backId;
 
     @ApiModelProperty(value = "预约用户姓名")
     private String userName;

@@ -1,10 +1,13 @@
-package com.ren.msmservice.controller;
+package com.ren.orderservice.controller;
 
 import com.ren.commonutils.Result;
-import com.ren.msmservice.utils.RandomUtil;
+import com.ren.orderservice.utils.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @RestController
-@RequestMapping("/edumsm/msm")
+@RequestMapping("/order/msm")
 public class Msmcontroller {
 
 

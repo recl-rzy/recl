@@ -38,7 +38,7 @@ public class EduReservationServiceImpl extends ServiceImpl<EduReservationMapper,
         String end = reservationQuery.getEnd();
 
         QueryWrapper<EduReservation> wrapper = new QueryWrapper<>();
-        wrapper.eq("counselor_id", id);
+        wrapper.eq("back_id", id);
         Page<EduReservation> page = new Page<>(current, limit);
         if(!StringUtils.isEmpty(userName)) wrapper.like("user_name", userName);
         if(!StringUtils.isEmpty(mobile)) wrapper.like("mobile", mobile);

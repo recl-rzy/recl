@@ -35,7 +35,7 @@
       <module name="gateway" options="-parameters" />
       <module name="rabbitmq" options="-parameters" />
       <module name="recl" options="" />
-      <module name="service" options="" />
+      <module name="service" options="-parameters" />
       <module name="service_acl" options="-parameters" />
       <module name="service_base" options="-parameters" />
       <module name="service_chat" options="-parameters" />

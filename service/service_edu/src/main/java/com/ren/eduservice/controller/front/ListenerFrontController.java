@@ -7,10 +7,7 @@ import com.ren.eduservice.service.EduListenerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +27,15 @@ public class ListenerFrontController {
 
     @Autowired
     EduListenerService eduListenerService;
+
+    @ApiOperation(value = "查询倾听师师信息")
+    @GetMapping("/getListener/{id}")
+    public Result getListener(@PathVariable String id) {
+
+        EduListener listener = eduListenerService.getById(id);
+        return Result.ok()
+                .data("listener", listener);
+    }
 
     @ApiOperation(value = "倾听师信息分页")
     @PostMapping("/indexPageListenerFactor/{current}/{limit}")
