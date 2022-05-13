@@ -84,15 +84,15 @@ public class RedisConfig {
     }
 
     //Redis读写分离配置
-//    @Bean
-//    public RedisConnectionFactory lettuceConnectionFactory(RedisProperties redisProperties) {
-//        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration(redisProperties.getSentinel().getMaster(),
-//                new HashSet<>(redisProperties.getSentinel().getNodes()));
-//        LettuceClientConfiguration lettuceClientConfiguration = LettuceClientConfiguration.builder()
-//                .readFrom(ReadFrom.REPLICA_PREFERRED)
-//                .build();
-//        return new LettuceConnectionFactory(redisSentinelConfiguration, lettuceClientConfiguration);
-//    }
+    @Bean
+    public RedisConnectionFactory lettuceConnectionFactory(RedisProperties redisProperties) {
+        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration(redisProperties.getSentinel().getMaster(),
+                new HashSet<>(redisProperties.getSentinel().getNodes()));
+        LettuceClientConfiguration lettuceClientConfiguration = LettuceClientConfiguration.builder()
+                .readFrom(ReadFrom.REPLICA_PREFERRED)
+                .build();
+        return new LettuceConnectionFactory(redisSentinelConfiguration, lettuceClientConfiguration);
+    }
 
 
     @Bean

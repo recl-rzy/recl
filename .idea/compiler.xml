@@ -9,8 +9,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="common_utils" />
         <module name="spring_security" />
-        <module name="service_msm" />
         <module name="service_order" />
+        <module name="service_msm" />
         <module name="service_chat" />
         <module name="rabbitmq" />
         <module name="service_oss" />
@@ -35,7 +35,7 @@
       <module name="gateway" options="-parameters" />
       <module name="rabbitmq" options="-parameters" />
       <module name="recl" options="" />
-      <module name="service" options="-parameters" />
+      <module name="service" options="" />
       <module name="service_acl" options="-parameters" />
       <module name="service_base" options="-parameters" />
       <module name="service_chat" options="-parameters" />
