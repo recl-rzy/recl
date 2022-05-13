@@ -1,6 +1,10 @@
+
+
 1. 项目背景：
 recl为基于循环神经网络（LSTM）的心理健康平台，后端采用微服务进行开发，循环神经网络模型利用深度学习框架Pytorch训练，目前训练了15万组对话，
 可模拟简单的咨询对话;recl仅为后端部分，循环神经网络模型为recl-seq2seq，recl-vue为前端部分
+
+
 
 2.选用技术：SpringBoot + SpringCloud + MybatisPlus + JWT + RabbitMq + Redis + SpringSecurity + Redisson分布式锁
 整个新项目采用微服务架构，设计SpringCloud的多数组件，包括：Nacos、Sentinel、GateWay、openFeign等
