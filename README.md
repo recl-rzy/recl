@@ -506,7 +506,7 @@ public Result updateArticle(@RequestBody(required = true) EduArticle eduArticle)
     String articleStr = RedisUtils.getStr(articleFrontKey);
     //缓存穿透判断
     if(！RedisKeyPrefixConstant.EMPTY_CACHE.equals(articleStr)) return Result.ok()
-            .data("article", (articleFrontVo) articleStr)；
+            .data("article", JSON.parseObject(articleStr, EduArticle.class))；
     //分布式锁redisson,防止缓存击穿
     RLock lock = redisson.getLock(RedisKeyPrefixConstant.LOCK_ARTICLE_FRONT_HOT_CACHE_CREATE_PREFIX + id);
     //加锁操作
@@ -526,7 +526,7 @@ public Result updateArticle(@RequestBody(required = true) EduArticle eduArticle)
                     RedisUtils.set(articleFrontKey, RedisKeyPrefixConstant.EMPTY_CACHE, RedisUtils.setCacheTimeout(7200));
                     return Result.error()
                             .message("该文章不存在")
-                            .data("article", new ArticleVo())；
+                            .data("article", new EduArticle())；
                 }
                 RedisUtils.set(articleFrontKey, article, RedisUtils.setCacheTimeout(7200));
             } else {
@@ -534,7 +534,7 @@ public Result updateArticle(@RequestBody(required = true) EduArticle eduArticle)
                 if(RedisKeyPrefixConstant.EMPTY_CACHE.equals(articleStr)) {
                     return Result.error()
                             .message("该文章不存在")
-                            .data("article", new ArticleVo())；
+                            .data("article", new EduArticle())；
                 }
                 article = JSON.parseObject(articleStr, EduArticle.class);
                 //热点缓存续期
@@ -549,7 +549,7 @@ public Result updateArticle(@RequestBody(required = true) EduArticle eduArticle)
     }
 
     return Result.ok()
-            .data("article", articleFrontVo)；
+            .data("article", article)；
 }
 
 ```
