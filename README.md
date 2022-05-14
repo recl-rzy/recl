@@ -464,7 +464,99 @@ spring.cloud.gateway.routes[8].predicates= Path=/edusta/**
 - service_ucenter(用户模块)
 
 
-### 运行图
+
+4.Redisson:运用Redisson分布式锁解决mysql和redis的双写不一致性
+
+举例子：修改时尝试加redis写锁，如果此时没有用户查这个缓存key，则加锁成功，修改并删除缓存，等下个用户查询mysql再重建key，注意一定要释放锁如果有用户查询该记录，会先查redis，如果有这个cache，直接返回，否则加锁，并且加双重锁，第一层保证只有一个用户可以重建该key，加第二层写锁保证该记录无法被修改，保证一致性，加锁后后再查缓存，因为并发情况下其他用户可能已经重建了key，不存在则查mysql，再重建key，重建成功释放锁，返回结果
+
+
+```
+@ApiOperation(value = "心理美文信息修改")
+@PostMapping("/updateArticle")
+public Result updateArticle(@RequestBody(required = true) EduArticle eduArticle) throws InterruptedException {
+    //获取读写锁
+    RReadWriteLock readWriteLock = redisson.getReadWriteLock(RedisKeyPrefixConstant.LOCK_ARTICLE_FRONT_UPDATE_CACHE_PREFIX + eduArticle.getId());
+    RLock rLock = readWriteLock.writeLock();
+    rLock.lock();   //加写锁
+    boolean flag;
+    try {
+        UpdateWrapper<EduArticle> wrapper = new UpdateWrapper<>();
+        wrapper.set("one_tag", eduArticle.getOneTag());
+        wrapper.set("two_tag", eduArticle.getTwoTag());
+        wrapper.set("three_tag", eduArticle.getThreeTag());
+        flag = eduArticleService.updateById(eduArticle);
+        //删除缓存，等待预热
+        if(flag) RedisUtils.del(RedisKeyPrefixConstant.ARTICLE_FRONT_CACHE + eduArticle.getId());
+        else return Result.error();
+    } finally {
+        rLock.unlock();  //释放锁
+    }
+    return Result.ok();
+}
+
+
+
+@Override
+    public Result getFrontArticleInfo(String id) {
+
+    EduArticle article = null;
+    //生成Redis中的key
+    String articleFrontKey = RedisKeyPrefixConstant.ARTICLE_FRONT_CACHE + id;
+    //从缓存获取文章信息
+    String articleStr = RedisUtils.getStr(articleFrontKey);
+    //缓存穿透判断
+    if(！RedisKeyPrefixConstant.EMPTY_CACHE.equals(articleStr)) return Result.ok()
+            .data("article", (articleFrontVo) articleStr)；
+    //分布式锁redisson,防止缓存击穿
+    RLock lock = redisson.getLock(RedisKeyPrefixConstant.LOCK_ARTICLE_FRONT_HOT_CACHE_CREATE_PREFIX + id);
+    //加锁操作
+    lock.lock();
+    try {
+        RReadWriteLock readWriteLock = redisson.getReadWriteLock(RedisKeyPrefixConstant.LOCK_ARTICLE_FRONT_UPDATE_CACHE_PREFIX + id);
+        RLock rLock = readWriteLock.readLock();
+        rLock.lock();            //对该操作加读锁
+        try {
+            //缓存中不存在查询数据库并放入缓存
+            if(articleStr == null) {
+                //查询数据库
+                article = this.baseMapper.selectById(id);
+                //判断数据库中是否存在，存在则放入缓存，不存在缓存空key
+                if(article == null) {
+                    //缓存中记录不存在的Key，直接返回error
+                    RedisUtils.set(articleFrontKey, RedisKeyPrefixConstant.EMPTY_CACHE, RedisUtils.setCacheTimeout(7200));
+                    return Result.error()
+                            .message("该文章不存在")
+                            .data("article", new ArticleVo())；
+                }
+                RedisUtils.set(articleFrontKey, article, RedisUtils.setCacheTimeout(7200));
+            } else {
+                //解决缓存穿透,若为空value,直接返回error
+                if(RedisKeyPrefixConstant.EMPTY_CACHE.equals(articleStr)) {
+                    return Result.error()
+                            .message("该文章不存在")
+                            .data("article", new ArticleVo())；
+                }
+                article = JSON.parseObject(articleStr, EduArticle.class);
+                //热点缓存续期
+                RedisUtils.expire(articleFrontKey, RedisUtils.setCacheTimeout(7200));
+            }
+        } finally {
+            rLock.unlock();   //释放读锁
+        }
+    } finally {
+        //保证锁释放
+        lock.unlock();
+    }
+
+    return Result.ok()
+            .data("article", articleFrontVo)；
+}
+
+```
+
+
+
+### 5. 运行图
 
 
 ![输入图片说明](https://recl-edu.oss-cn-beijing.aliyuncs.com/recl/%E5%9B%BE%E7%89%878.jpg)
